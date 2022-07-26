@@ -24,26 +24,22 @@ const movieSchema = new mongoose.Schema({
   image: {
     type: String,
     required: true,
-    validate: {},
+    // validate: {},
   },
   trailerLink: {
     type: String,
     required: true,
-    validate: {},
+    // validate: {},
   },
   thumbnail: {
     type: String,
     required: true,
-    validate: {},
+    // validate: {},
   },
   owner: {
     required: true,
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
-  },
-  movieId: {
-    type: Number,
-    required: true,
   },
   nameRU: {
     type: String,

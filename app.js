@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const express = require('express');
+const { errors } = require('celebrate');
 const error = require('./middlewares/error');
-const router = require('./routes/routes');
-
+const routes = require('./routes/index');
 
 const { PORT = 3000 } = process.env;
 
@@ -12,7 +12,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 /** все роуты */
-app.use(router);
+app.use(routes);
+
+/** обработчик ошибок celebrate */
+app.use(errors());
 
 /** централизованный обработчик ошибок */
 app.use(error);

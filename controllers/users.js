@@ -2,13 +2,23 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
 const CastError = require('../errors/cast-error');
 
+/** ВРЕМЕННЫЙ получить всех пользователей */
+module.exports.getUsers = (req, res, next) => {
+  User
+    .find({})
+    .then((users) => {
+      res.send(users);
+    })
+    .catch(next);
+};
+
 /** возвращает информацию о пользователе - email, name */
 module.exports.getMe = (req, res, next) => {
   const userId = req.user._id;
   User
     .findById(userId)
     .then((user) => {
-      if(!user) {
+      if (!user) {
         throw new NotFoundError('Пользователь по указанному id не найден');
       }
       res.send(user);
@@ -29,7 +39,7 @@ module.exports.updateUser = (req, res, next) => {
   User
     .findByIdAndUpdate(
       userId,
-      {email, name },
+      { email, name },
       { new: true, runValidators: true },
     )
     .orFail(() => {
