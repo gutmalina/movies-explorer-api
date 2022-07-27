@@ -26,6 +26,7 @@ module.exports.createMovie = (req, res, next) => {
     nameRU,
     nameEN,
     thumbnail,
+    movieId,
   } = req.body;
   const owner = req.user._id;
   Movie
@@ -40,6 +41,7 @@ module.exports.createMovie = (req, res, next) => {
       nameRU,
       nameEN,
       thumbnail,
+      movieId,
       owner,
     })
     .then((movie) => {
@@ -82,16 +84,3 @@ module.exports.deleteMovie = (req, res, next) => {
       }
     });
 };
-
-// "country": "страна создания",
-// "director": "режисер фильма",
-// "duration": "длительность фильма число",
-// "year": "год выпуска",
-// "description": "описание фильма",
-// "image": "ссылка на постер url",
-// "trailerLink": "ссылка на трейлер url",
-// "nameRU": "название фильма на русском",
-// "nameEN": "название фильма на английском",
-// "thumbnail": "миниатюрное изображение постера url",
-// "movieId": "id фильма",
-// "owner": "id пользователя",
