@@ -1,13 +1,8 @@
-const allowedCors = [
-  'http://webdiploma.nomoredomains.xyz',
-  'https://webdiploma.nomoredomains.xyz',
-  'http://localhost:3000',
-  'https://localhost:3000',
-];
+const { CORS_ALLOWED } = require('../utils/config');
 
 module.exports = (req, res, next) => {
   const { origin } = req.headers;
-  if (allowedCors.includes(origin)) {
+  if (CORS_ALLOWED.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
   }
 

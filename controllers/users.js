@@ -8,16 +8,6 @@ const { SALT_ROUNDS, MONGO_DUPLICATE_ERROR_CODE } = require('../utils/constants'
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-/** ВРЕМЕННЫЙ получить всех пользователей */
-module.exports.getUsers = (req, res, next) => {
-  User
-    .find({})
-    .then((users) => {
-      res.send(users);
-    })
-    .catch(next);
-};
-
 /** создаёт пользователя */
 module.exports.createUser = (req, res, next) => {
   const {
