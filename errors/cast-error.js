@@ -1,7 +1,9 @@
+const { CODE_ERROR_CAST } = require('../utils/constants');
+
 class CastError extends Error {
   constructor(message) {
     super(message);
-    this.statusCode = 400;
+    this.statusCode = CODE_ERROR_CAST;
   }
 }
 

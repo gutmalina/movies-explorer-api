@@ -6,29 +6,23 @@ const { errors } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const error = require('./middlewares/error');
 const limiter = require('./middlewares/limiter');
-const cors = require('./middlewares/cors');
 const routes = require('./routes/index');
-const { PORT_MONGO } = require('./utils/config');
-
-const { PORT = 3000 } = process.env;
+const { PORT, PORT_MONGO } = require('./utils/config');
 
 const app = express();
+
+/** преобразование тела запроса в json */
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+/** обработка логгер запросов */
+app.use(requestLogger);
 
 /** подключение лимита запросов */
 app.use(limiter);
 
 /** настройка заголовков для защиты приложения */
 app.use(helmet());
-
-/** преобразование тела запроса в json */
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-/** обработка кросс-доменных запросов */
-app.use(cors);
-
-/** обработка логгер запросов */
-app.use(requestLogger);
 
 /** все роуты */
 app.use(routes);

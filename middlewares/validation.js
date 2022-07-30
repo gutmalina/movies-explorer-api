@@ -1,5 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
-const URL_REGEX = require('../utils/constants');
+const { isURL } = require('validator');
 
 /** создаёт пользователя */
 const validateCreateUser = celebrate({
@@ -34,9 +34,24 @@ const validateCreateMovie = celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().regex(RegExp(URL_REGEX)),
-    trailerLink: Joi.string().required().regex(RegExp(URL_REGEX)),
-    thumbnail: Joi.string().required().regex(RegExp(URL_REGEX)),
+    image: Joi.string()
+      .required()
+      .custom((value, helper) => {
+        if (isURL(value)) return value;
+        return helper.message('Введены некорректные данные');
+      }),
+    trailerLink: Joi.string()
+      .required()
+      .custom((value, helper) => {
+        if (isURL(value)) return value;
+        return helper.message('Введены некорректные данные');
+      }),
+    thumbnail: Joi.string()
+      .required()
+      .custom((value, helper) => {
+        if (isURL(value)) return value;
+        return helper.message('Введены некорректные данные');
+      }),
     movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
@@ -46,7 +61,7 @@ const validateCreateMovie = celebrate({
 /** удаляет сохранённый фильм по ID */
 const validateDeleteMovie = celebrate({
   params: Joi.object().keys({
-    movieId: Joi.string(),
+    id: Joi.string().length(24).hex(),
   }),
 });
 

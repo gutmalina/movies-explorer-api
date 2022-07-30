@@ -58,10 +58,10 @@ module.exports.createMovie = (req, res, next) => {
 
 /** удаляет сохранённый фильм по ID */
 module.exports.deleteMovie = (req, res, next) => {
-  const { movieId } = req.params;
+  const { id } = req.params;
   const userId = req.user._id;
   Movie
-    .findById(movieId)
+    .findById(id)
     .orFail(() => {
       throw new NotFoundError('Фильм с указанным id не найден');
     })
@@ -70,7 +70,7 @@ module.exports.deleteMovie = (req, res, next) => {
         throw next(new ForbiddenError('Фильм не может быть удален'));
       }
       Movie
-        .findByIdAndRemove(movieId)
+        .findByIdAndRemove(id)
         .then(() => {
           res.send(movie);
         })

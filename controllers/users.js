@@ -54,11 +54,7 @@ module.exports.getMe = (req, res, next) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new CastError('Введен некорректный id пользователя'));
-      } else {
-        next(err);
-      }
+      next(err);
     });
 };
 
@@ -85,6 +81,8 @@ module.exports.updateUser = (req, res, next) => {
         next(new NotFoundError('Пользователь по указанному id не найден'));
       } else if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new CastError('Введены некорректные данные пользователя'));
+      } else if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
+        next(new ConflictError('Пользователь с указанным email уже существует'));
       } else {
         next(err);
       }
