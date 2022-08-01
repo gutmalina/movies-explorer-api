@@ -1,5 +1,6 @@
 const { celebrate, Joi } = require('celebrate');
 const { isURL } = require('validator');
+const { MESSAGE_ERROR_CAST } = require('../utils/constants');
 
 /** создаёт пользователя */
 const validateCreateUser = celebrate({
@@ -38,19 +39,19 @@ const validateCreateMovie = celebrate({
       .required()
       .custom((value, helper) => {
         if (isURL(value)) return value;
-        return helper.message('Введены некорректные данные');
+        return helper.message(MESSAGE_ERROR_CAST);
       }),
     trailerLink: Joi.string()
       .required()
       .custom((value, helper) => {
         if (isURL(value)) return value;
-        return helper.message('Введены некорректные данные');
+        return helper.message(MESSAGE_ERROR_CAST);
       }),
     thumbnail: Joi.string()
       .required()
       .custom((value, helper) => {
         if (isURL(value)) return value;
-        return helper.message('Введены некорректные данные');
+        return helper.message(MESSAGE_ERROR_CAST);
       }),
     movieId: Joi.number().required(),
     nameRU: Joi.string().required(),

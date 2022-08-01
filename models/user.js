@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const UnauthorizedError = require('../errors/unauthorized-error');
+const { MESSAGE_ERROR_UNAUTHORIZED_SIGNUP } = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -27,13 +28,13 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     .select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new UnauthorizedError('Некорректная почта или пароль'));
+        return Promise.reject(new UnauthorizedError(MESSAGE_ERROR_UNAUTHORIZED_SIGNUP));
       }
       return bcrypt
         .compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new UnauthorizedError('Некорректная почта или пароль'));
+            return Promise.reject(new UnauthorizedError(MESSAGE_ERROR_UNAUTHORIZED_SIGNUP));
           }
           return user;
         });

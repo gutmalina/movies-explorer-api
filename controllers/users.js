@@ -4,7 +4,14 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
 const CastError = require('../errors/cast-error');
 const ConflictError = require('../errors/conflict-error');
-const { SALT_ROUNDS, MONGO_DUPLICATE_ERROR_CODE } = require('../utils/constants');
+const {
+  SALT_ROUNDS,
+  MONGO_DUPLICATE_ERROR_CODE,
+  SECRET,
+  MESSAGE_ERROR_CAST,
+  MESSAGE_ERROR_CONFLICT,
+  MESSAGE_ERROR_NOTFOUND_USER,
+} = require('../utils/constants');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -33,9 +40,9 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new CastError('Введены некорректные данные пользователя'));
+        next(new CastError(MESSAGE_ERROR_CAST));
       } else if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
-        next(new ConflictError('Пользователь с указанным email уже существует'));
+        next(new ConflictError(MESSAGE_ERROR_CONFLICT));
       } else {
         next(err);
       }
@@ -49,7 +56,7 @@ module.exports.getMe = (req, res, next) => {
     .findById(userId)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь по указанному id не найден');
+        throw new NotFoundError(MESSAGE_ERROR_NOTFOUND_USER);
       }
       res.send(user);
     })
@@ -69,7 +76,7 @@ module.exports.updateUser = (req, res, next) => {
       { new: true, runValidators: true },
     )
     .orFail(() => {
-      const err = new Error('Пользователь по указанному id не найден');
+      const err = new Error(MESSAGE_ERROR_NOTFOUND_USER);
       err.name = 'NotFoundError';
       throw err;
     })
@@ -78,11 +85,11 @@ module.exports.updateUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'NotFoundError') {
-        next(new NotFoundError('Пользователь по указанному id не найден'));
+        next(new NotFoundError(MESSAGE_ERROR_NOTFOUND_USER));
       } else if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new CastError('Введены некорректные данные пользователя'));
+        next(new CastError(MESSAGE_ERROR_CAST));
       } else if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
-        next(new ConflictError('Пользователь с указанным email уже существует'));
+        next(new ConflictError(MESSAGE_ERROR_CONFLICT));
       } else {
         next(err);
       }
@@ -97,7 +104,7 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        NODE_ENV === 'production' ? JWT_SECRET : SECRET,
         { expiresIn: '7d' },
       );
       res.send({ token });
