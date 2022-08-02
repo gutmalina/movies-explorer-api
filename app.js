@@ -7,7 +7,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const error = require('./middlewares/error');
 const limiter = require('./middlewares/limiter');
 const routes = require('./routes/index');
-const { PORT, PORT_MONGO } = require('./utils/config');
+const { PORT, MONGO_URL } = require('./utils/config');
 
 const app = express();
 
@@ -38,7 +38,7 @@ app.use(error);
 
 /** подключение к mongo и серверу */
 async function main() {
-  await mongoose.connect(PORT_MONGO);
+  await mongoose.connect(MONGO_URL);
   app.listen(PORT);
 }
 
