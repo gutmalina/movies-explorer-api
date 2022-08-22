@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
+const cors = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const error = require('./middlewares/error');
 const limiter = require('./middlewares/limiter');
@@ -14,6 +15,9 @@ const app = express();
 /** преобразование тела запроса в json */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+/** обработка кросс-доменных запросов */
+app.use(cors);
 
 /** обработка логгер запросов */
 app.use(requestLogger);
